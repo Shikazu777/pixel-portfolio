@@ -25,6 +25,10 @@ function preload() {
   this.load.spritesheet("player", "player.png", { frameWidth: 1024, frameHeight: 1024 })
   this.load.tilemapTiledJSON("map", "map.json")
   this.load.image("tiles", "tiles.png")
+
+  this.load.audio("bgm", "bgm.mp3")
+  this.load.audio("step", "footstep.wav")
+
 }
 
 function create() {
@@ -62,6 +66,16 @@ function create() {
   this.anims.create({ key: "walk_down", frames: this.anims.generateFrameNumbers("player", { start: 12, end: 15 }), frameRate: 8, repeat: -1 })
   this.anims.create({ key: "idle", frames: [{ key: "player", frame: 16 }], frameRate: 1 })
   player.play("idle")
+
+  // 🔊 SOUND
+this.bgm = this.sound.add("bgm", { loop: true, volume: 0.5 })
+this.step = this.sound.add("step", { loop: true, volume: 0.4 })
+
+// start music only after user interacts (mobile browser rule)
+this.input.once("pointerdown", () => {
+  if (!this.bgm.isPlaying) this.bgm.play()
+})
+
 
   // HOUSE ZONES
   const houseLayer = map.getObjectLayer("Houses")
@@ -152,5 +166,12 @@ function update() {
     moving = true
   }
 
-  if (!moving) player.play("idle", true)
+  if (moving) {
+  if (!this.step.isPlaying) this.step.play()
+ } else {
+  this.step.stop()
+  player.play("idle", true)
+ }
+
+
 }
