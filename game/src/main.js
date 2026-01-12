@@ -144,6 +144,9 @@ this.input.once("pointerdown", () => {
   cursors = this.input.keyboard.createCursorKeys()
   keys = this.input.keyboard.addKeys("W,A,S,D")
 
+  this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
+this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+  
   // 📱 MOBILE D-PAD (FIXED POSITION)
   const style = { font:"32px Arial", fill:"#fff", backgroundColor:"#000", padding:{x:14,y:10} }
 
@@ -165,6 +168,8 @@ this.input.once("pointerdown", () => {
   right.on("pointerdown",()=>mobile.right=true)
   right.on("pointerup",()=>mobile.right=false)
 }
+
+
 
 function update() {
   const speed = 450
@@ -204,6 +209,11 @@ function update() {
   this.step.stop()
   player.play("idle", true)
  }
+
+ if (this.currentZone && (this.enterKey.isDown || this.eKey.isDown)) {
+  window.open(this.currentZone.url, "_blank")
+}
+
 
 
 }
