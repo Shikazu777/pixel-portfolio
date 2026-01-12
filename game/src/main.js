@@ -47,13 +47,13 @@ function create() {
 
   this.enterButton = this.add.text(
   this.scale.width / 2,
-  this.scale.height - 80,
+  this.scale.height - 110,
   "ENTER",
   {
     font: "24px Arial",
     fill: "#fff",
     backgroundColor: "#000",
-    padding: { x: 20, y: 10 }
+    padding: { x: 40, y: 20 }
   }
 )
 .setScrollFactor(0)
