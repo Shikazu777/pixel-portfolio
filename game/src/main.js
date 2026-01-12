@@ -45,6 +45,32 @@ function create() {
   player.setDepth(10)
   player.setCollideWorldBounds(true)
 
+  this.enterButton = this.add.text(
+  this.scale.width / 2,
+  this.scale.height - 80,
+  "ENTER",
+  {
+    font: "24px Arial",
+    fill: "#fff",
+    backgroundColor: "#000",
+    padding: { x: 20, y: 10 }
+  }
+)
+.setScrollFactor(0)
+.setDepth(100)
+.setOrigin(0.5)
+.setVisible(false)
+.setInteractive()
+
+this.currentZone = null
+
+this.enterButton.on("pointerdown", () => {
+  if (this.currentZone?.url) {
+    window.open(this.currentZone.url, "_blank")
+  }
+})
+
+
   // LAYERS + COLLISION
   map.layers.forEach((_, i) => {
     const layer = map.createLayer(i, tileset, 0, 0)
@@ -93,17 +119,23 @@ this.input.once("pointerdown", () => {
       label.setDepth(20)
 
       this.physics.add.overlap(player, zone, () => {
-        if (!zone.inside && zone.url) {
-          zone.inside = true
-          window.open(zone.url, "_blank")
-        }
+        zone.inside = true
+         this.currentZone = zone
+        this.enterButton.setVisible(true)
       })
 
+
       zone.update = () => {
-        if (!Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(), zone.getBounds())) {
-          zone.inside = false
-        }
-      }
+  const inside = Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(), zone.getBounds())
+
+  if (!inside) {
+    zone.inside = false
+    if (this.currentZone === zone) {
+      this.currentZone = null
+      this.enterButton.setVisible(false)
+    }
+  }
+}
       this.events.on("update", zone.update)
     })
   }
